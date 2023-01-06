@@ -15,6 +15,15 @@ async function list(req, res) {
     });
 }
 
+async function create(req, res, next) {
+  const newReservation = {
+    ...req.body.data
+  }
+  const data = await service.create(newReservation);
+  res.status(201).json({data});
+}
+
 module.exports = {
   list,
+  create,
 };

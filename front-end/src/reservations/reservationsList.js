@@ -3,7 +3,7 @@ import { listReservations } from "../utils/api";
 import Reservation from "./reservation";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function ReservationList({date}){
+function ReservationsList({date}){
 
     const [reservations, setReservations] = useState([]);
     const [reservationsError, setReservationsError] = useState(null);
@@ -33,4 +33,4 @@ function ReservationList({date}){
     )
 }
 
-export default ReservationList;
+export default ReservationsList;
