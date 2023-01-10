@@ -25,10 +25,14 @@ function ReservationForm(){
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Submitted:", formData);
-    const response = await createReservation(formData);
+    const reservation = {
+      ...formData
+    }
+    const response = await createReservation(reservation);
     const savedData = await response.json();
     console.log("Saved reservation!", savedData);
     setFormData({ ...initialFormState });
+
   };
 
   const handleCancel = (event) => {
