@@ -3,6 +3,8 @@ import React from "react";
 function Reservation({reservation}){
     return (
         <div>
+            <p>{reservation.reservation_time}</p>
+            <br />
             <p>{reservation.reservation_id}</p>
             <br />
             <p>{reservation.first_name}</p>

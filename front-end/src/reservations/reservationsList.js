@@ -19,14 +19,19 @@ function ReservationsList({date}){
         return () => abortController.abort();
     }
 
-    const list = reservations.map((reservation) => (
+
+    //sort reservations by time
+    const sortedReservations = reservations.sort((r1, r2) => 
+        (r1.reservation_time > r2.reservation_time) ? 1 : (r1.reservation_time < r2.reservation_time) ? -1 : 0);
+
+    //construct list of reservation components 
+    const list = sortedReservations.map((reservation) => (
         <Reservation key={reservation.reservation_id} reservation={reservation} />
     ));
 
     return(
         <main className="container">
             <ErrorAlert error={reservationsError} />
-            <h2 className="font-poppins">Reservations</h2>
             <hr />
             <section className="row">{list}</section>
         </main>
