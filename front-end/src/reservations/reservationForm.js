@@ -31,6 +31,7 @@ function ReservationForm(){
     const response = await createReservation(reservation);
     const savedData = await response.json();
     console.log("Saved reservation!", savedData);
+    history.push(`/dashboard?date=${reservation.reservation_date}`);
     setFormData({ ...initialFormState });
 
   };
