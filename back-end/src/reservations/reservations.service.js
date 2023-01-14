@@ -2,10 +2,12 @@ const knex = require("../db/connection");
 
 async function list(date) {
     if(!date){
-        return knex("reservations").select("*");
+        return knex("reservations").select("*")
+            .orderBy(['reservation_date','reservation_time']);
     } else {
         return knex("reservations").select("*")
-            .where('reservation_date',date);
+            .where('reservation_date',date)
+            .orderBy('reservation_time', 'asc' );
     }
 }
 

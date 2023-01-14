@@ -10,17 +10,19 @@ function ReservationForm(){
       mobile_number: "",
       reservation_date: "",
       reservation_time: "",
-      people: "",
+      people: 0,
     };
 
   const history = useHistory();
-  const [reservationsError, setReservationsError] = useState(Error("Test") /* null */);
+  const [reservationsError, setReservationsError] = useState(null);
   const [formData, setFormData] = useState({ ...initialFormState });
 
   const handleChange = ({ target }) => {
+
+    const value = target.name === "people" ? target.valueAsNumber : target.value;
     setFormData({
       ...formData,
-      [target.name]: target.value,
+      [target.name]: value,
     });
   };
 
@@ -31,21 +33,13 @@ function ReservationForm(){
       ...formData
     }
 
-  const handleError = (res) => {
-    if(!res.ok){
-      setReservationsError(Error(res.statusText));
-      return res;
-    } else {
-      return res;
-    }
-  }
-
     setReservationsError(null);
 
-    const response = await createReservation(reservation).then(handleError);
+    const response = await createReservation(reservation);
     const savedData = await response.json();
+    setReservationsError(Error(savedData.error));
     console.log("Saved reservation!", savedData);
-    if(!reservationsError){
+    if(!savedData.error){
       history.push(`/dashboard?date=${reservation.reservation_date}`);
     }
     setFormData({ ...initialFormState });
