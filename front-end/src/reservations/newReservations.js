@@ -1,7 +1,8 @@
-import React from "react";
 import ReservationForm from "./reservationForm";
 
+
 function NewReservations(){
+
     return (
         <div>
             <h1>New Reservations</h1>

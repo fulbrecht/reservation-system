@@ -1,3 +1,4 @@
+import ErrorAlert from "../layout/ErrorAlert";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { createReservation } from "../utils/api";
@@ -13,6 +14,7 @@ function ReservationForm(){
     };
 
   const history = useHistory();
+  const [reservationsError, setReservationsError] = useState(Error("Test") /* null */);
   const [formData, setFormData] = useState({ ...initialFormState });
 
   const handleChange = ({ target }) => {
@@ -28,10 +30,24 @@ function ReservationForm(){
     const reservation = {
       ...formData
     }
-    const response = await createReservation(reservation);
+
+  const handleError = (res) => {
+    if(!res.ok){
+      setReservationsError(Error(res.statusText));
+      return res;
+    } else {
+      return res;
+    }
+  }
+
+    setReservationsError(null);
+
+    const response = await createReservation(reservation).then(handleError);
     const savedData = await response.json();
     console.log("Saved reservation!", savedData);
-    history.push(`/dashboard?date=${reservation.reservation_date}`);
+    if(!reservationsError){
+      history.push(`/dashboard?date=${reservation.reservation_date}`);
+    }
     setFormData({ ...initialFormState });
 
   };
@@ -109,6 +125,8 @@ function ReservationForm(){
             value={formData.people}
             />
         </label>
+        <br />
+        <ErrorAlert error={reservationsError} />
         <br />
         <button type="submit">Submit</button>
         <br />
