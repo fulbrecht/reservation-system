@@ -62,18 +62,29 @@ function requiredFieldsExist(req, res, next){
 }
 
 //Date Validations
-
 /* Return 400 if reservation_date is: 
     -Not a date
     -In the past
     -On a Tuesday
  */
 
+function isPastDate(dateTime){
+  const today = new Date();
+  return today.setHours(0,0,0) >= dateTime.getTime() ? true : false;
+}
+function isTuesday(date){
+  const resDate = new Date(date);
+  return resDate.getUTCDay() === 2 ? true : false;
+}
+
 function validateDate(req, res, next){
   const resDate = req.body.data.reservation_date;
+  const resTime = req.body.data.reservation_time;
+  const resDateTime = new Date(`${resDate}T${resTime}`);
+
   if(!Date.parse(resDate)){
     next({status: 400, message: `reservation_date is not a date`});
-  } else if(isPast(resDate)){
+  } else if(isPastDate(resDateTime)){
     next({status: 400, message: `reservation_date must be in the future`});
   } else if(isTuesday(resDate)){
     next({status: 400, message: `restaurant is closed on Tuesdays`});
@@ -81,22 +92,48 @@ function validateDate(req, res, next){
   next();
 }
 
-function isPast(date){
-  return Date.now() > Date.parse(date) ? true : false;
-}
-function isTuesday(date){
-  const resDate = new Date(date);
-  return resDate.getUTCDay() === 2 ? true : false;
+//Time Validations
+/* Return 400 if reservation_time is: 
+    -Not a time
+    -In the past
+    -before 10:30am
+    -after 9:30pm
+ */
+
+function isValidTime(time){
+  return /[0-9]{2}:[0-9]{2}/.test(time);
 }
 
-//return 400 if reservation_time is not a time
+function isPastTime(dateTime){
+  return Date.now() >= dateTime.getTime() ? true:false;
+}
+
+function isBeforeOpening(dateTime){
+  const openTime = new Date(dateTime).setHours(10,30,0);
+  return openTime >= dateTime.getTime() ? true : false;
+}
+
+function isAfterClosing(dateTime){
+  const closeTime = new Date(dateTime).setHours(21,30,0);
+  return closeTime <= dateTime.getTime() ? true : false;
+}
+
 function validateTime(req, res, next){
-  const isValid = /[0-9]{2}:[0-9]{2}/.test(req.body.data.reservation_time);
-  if(!isValid){
+  const resDate = req.body.data.reservation_date;
+  const resTime = req.body.data.reservation_time;
+  const dateTime = new Date(`${resDate}T${resTime}`);
+
+  if(!isValidTime(resTime)){
     next({status: 400, message: `reservation_time is not a time`});
+  } else if(isPastTime(dateTime)){
+    next({status: 400, message: `reservation_time must be in the future`});
+  } else if(isBeforeOpening(dateTime)){
+    next({status: 400, message: `reservation_time must be after 10:30am`});
+  } else if(isAfterClosing(dateTime)){
+    next({status: 400, message: `reservation_time must be before 9:30pm`});
   }
   next();
-}
+  }
 
 //return 400 if people is not a number
 function validatePeople(req, res, next){
