@@ -1,7 +1,7 @@
 {
-  "name": "starter-restaurant-reservation",
+  "name": "reservation-system",
   "version": "1.0.0",
-  "description": "Starter project restaurant reservation system",
+  "description": "Capstone project based off of Thinkful starter restaurant reservation system",
   "private": true,
   "repository": {
     "type": "git",

@@ -22,8 +22,7 @@ async function create(req, res, next) {
   res.status(201).json({data});
 }
 
-//Validation middleware
-
+//Validation Middleware
 
 //return 400 if data is missing
 function dataExists(req, res, next){
@@ -62,12 +61,32 @@ function requiredFieldsExist(req, res, next){
   next();
 }
 
-//return 400 if reservation_date is not a date
+//Date Validations
+
+/* Return 400 if reservation_date is: 
+    -Not a date
+    -In the past
+    -On a Tuesday
+ */
+
 function validateDate(req, res, next){
-  if(!Date.parse(req.body.data.reservation_date)){
+  const resDate = req.body.data.reservation_date;
+  if(!Date.parse(resDate)){
     next({status: 400, message: `reservation_date is not a date`});
+  } else if(isPast(resDate)){
+    next({status: 400, message: `reservation_date must be in the future`});
+  } else if(isTuesday(resDate)){
+    next({status: 400, message: `restaurant is closed on Tuesdays`});
   }
   next();
+}
+
+function isPast(date){
+  return Date.now() > Date.parse(date) ? true : false;
+}
+function isTuesday(date){
+  const resDate = new Date(date);
+  return resDate.getUTCDay() === 2 ? true : false;
 }
 
 //return 400 if reservation_time is not a time
