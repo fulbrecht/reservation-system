@@ -1,7 +1,7 @@
 {
-  "name": "starter-restaurant-reservation-front-end",
+  "name": "reservation-system-front-end",
   "version": "1.0.0",
-  "description": "Starter code for restaurant reservation frontend",
+  "description": "Capstone project based on starter code for restaurant reservation frontend",
   "main": "src/index.js",
   "repository": {
     "type": "git",
