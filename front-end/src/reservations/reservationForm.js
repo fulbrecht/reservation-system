@@ -42,7 +42,7 @@ function ReservationForm(){
     if(!savedData.error){
       history.push(`/dashboard?date=${reservation.reservation_date}`);
     }
-    setFormData({ ...initialFormState });
+    //setFormData({ ...initialFormState });
 
   };
 

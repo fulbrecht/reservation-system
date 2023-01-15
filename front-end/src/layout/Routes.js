@@ -6,6 +6,7 @@ import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import NewReservations from "../reservations/newReservations";
 import useQuery from "../utils/useQuery";
+import NewTables from "../tables/newTables";
 
 
 
@@ -38,6 +39,9 @@ function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard  date={date}/>
+      </Route>
+      <Route path="/tables/new">
+        <NewTables />
       </Route>
       <Route>
         <NotFound />
