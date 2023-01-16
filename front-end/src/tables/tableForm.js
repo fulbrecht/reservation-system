@@ -1,21 +1,37 @@
 import ErrorAlert from "../layout/ErrorAlert";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { createTable } from "../utils/api";
 
 function TableForm(){
 
     const initialFormState = {
         table_name: "",
-        capacity: 0,
+        capacity: 1,
     }
 
     const history = useHistory();
     const [tableError, setTableError] = useState(null);
     const [formData, setFormData] = useState({ ...initialFormState });
 
-    function handleSubmit(){
-        setTableError(null)
-    }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log("Submitted:", formData);
+        const table = {
+          ...formData
+        }
+    
+        setTableError(null);
+    
+        const response = await createTable(table);
+        const savedData = await response.json();
+        setTableError(Error(savedData.error));
+        console.log("Saved table!", savedData);
+        if(!savedData.error){
+          //history.push(`/dashboard?date=${reservation.reservation_date}`);
+        }
+    
+      };
 
     const handleCancel = (event) => {
         event.preventDefault();

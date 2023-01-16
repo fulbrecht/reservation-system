@@ -52,12 +52,13 @@ async function fetchJson(url, options, onCancel) {
   }
 }
 
+
+//Reservation API functions
 /**
  * Retrieves all existing reservation.
  * @returns {Promise<[reservation]>}
  *  a promise that resolves to a possibly empty array of reservation saved in the database.
  */
-
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
@@ -68,8 +69,30 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+//Creates new reservation.
 export async function createReservation(data, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({data}),
+  }
+  return await fetch(url,options, signal);
+}
+
+//Table API Functions
+export async function listTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+
+  //
+  // Object.entries(params).forEach(([key, value]) =>
+  //   url.searchParams.append(key, value.toString())
+  // );
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+export async function createTable(data, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
   const options = {
     method: "POST",
     headers,
