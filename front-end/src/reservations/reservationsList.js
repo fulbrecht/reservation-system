@@ -31,9 +31,24 @@ function ReservationsList({date}){
 
     return(
         <main className="container">
+
             <ErrorAlert error={reservationsError} />
-            <hr />
-            <section className="row">{list}</section>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone #</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {list}
+                </tbody>
+            </table>
         </main>
     )
 }
