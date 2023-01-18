@@ -1,6 +1,8 @@
 import React from "react";
 
 function Reservation({reservation}){
+    const link = `/reservations/${reservation.reservation_id}/seat`;
+
     return (
         <tr>
             <td>{reservation.reservation_time}</td>
@@ -9,7 +11,7 @@ function Reservation({reservation}){
             <td>{reservation.last_name}</td>
             <td>{reservation.mobile_number}</td>
             <td>{reservation.reservation_date}</td>
-            <td><button>Seat</button></td>
+            <td><button href={link}>Seat</button></td>
         </tr>
     )
 }
