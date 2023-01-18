@@ -4,6 +4,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { previous, next, today} from "../utils/date-time";
 import { useHistory } from "react-router";
 import ReservationsList from "../reservations/reservationsList";
+import TableList from "../tables/tableList";
 
 /**
  * Defines the dashboard page.
@@ -56,6 +57,8 @@ function Dashboard({date}) {
       <button onClick={handleToday}>Today</button>
       <button onClick={handleNext}>Next</button>
       <ReservationsList date={date} reservations={reservations} />
+      <TableList />
+
     </main>
   );
 }
