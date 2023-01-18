@@ -1,7 +1,13 @@
 import React from "react";
+import { useHistory } from "react-router";
 
 function Reservation({reservation}){
     const link = `/reservations/${reservation.reservation_id}/seat`;
+    const history = useHistory();
+
+    const handleClick = () => {
+        history.push(link);
+      }
 
     return (
         <tr>
@@ -11,7 +17,7 @@ function Reservation({reservation}){
             <td>{reservation.last_name}</td>
             <td>{reservation.mobile_number}</td>
             <td>{reservation.reservation_date}</td>
-            <td><button href={link}>Seat</button></td>
+            <td><button href={link} onClick={handleClick}>Seat</button></td>
         </tr>
     )
 }

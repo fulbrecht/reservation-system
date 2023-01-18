@@ -5,8 +5,8 @@ const environment = process.env.NODE_ENV || "development";
 //List handler for reservation resources
 async function list(req, res) {
 
-    const date = req.query.date;
-    const data = await service.list(date);
+    const status = req.query.status;
+    const data = await service.list(status);
 
     res.json({
       data,

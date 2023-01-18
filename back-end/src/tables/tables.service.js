@@ -1,11 +1,14 @@
 const knex = require("../db/connection");
 
-async function list(reservation_id) {
-    if(!reservation_id){
+async function list(status) {
+    if(!status){
         return knex("tables").select("*");
-    } else {
+    } else if(status === "free"){
         return knex("tables").select("*")
-            .where('reservation_id',date);
+            .whereNull('reservation_id')
+    } else if(status === "occupied"){
+        return knex("tables").select("*")
+            .whereNotNull('reservation_id')
     }
 }
 
