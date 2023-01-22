@@ -32,7 +32,6 @@ async function create(table) {
 }
 
 async function update(updatedTable) {
-    console.log(updatedTable);
     await knex("tables")
         .where({ table_id: updatedTable.table_id })
         .update(updatedTable, "*");

@@ -10,7 +10,8 @@ const controller = require("./tables.controller");
 
 router
     .route("/:tableId/seat")
-    .put(controller.update)
+    .put(controller.seat)
+    .delete(controller.finish)
     .all(methodNotAllowed);
 
 router

@@ -76,11 +76,14 @@ export async function createReservation(data, signal) {
     method: "POST",
     headers,
     body: JSON.stringify({data}),
+    signal,
   }
-  return await fetch(url,options, signal);
+  return await fetch(url,options);
 }
 
-//Table API Functions
+//Table API Functions//
+
+//List tables
 export async function listTables(params, signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   Object.entries(params).forEach(([key, value]) =>
@@ -89,24 +92,38 @@ export async function listTables(params, signal) {
   return await fetchJson(url, { headers, signal }, []);
 }
 
+//Create new table
 export async function createTable(data, signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   const options = {
     method: "POST",
     headers,
     body: JSON.stringify({data}),
+    signal,
   }
-  return await fetch(url,options, signal);
+  return await fetch(url,options);
 }
 
-//Seat Reservation Function
+//Seat a reservation
 export async function seatReservation(tableId, data, signal){
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "PUT",
     headers,
     body: JSON.stringify({data}),
+    signal,
   }
-  return await fetch(url, options, signal);
+  return await fetch(url, options);
 
+}
+
+//Finish a table
+export async function finishTable(tableId, signal){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
+  const options = {
+    method: "DELETE",
+    headers,
+    signal,
+  }
+  return await fetch(url, options);
 }

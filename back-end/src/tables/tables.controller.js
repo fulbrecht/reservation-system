@@ -24,7 +24,7 @@ async function create(req, res, next) {
 }
 
 //Update handler for tables
-async function update(req, res, next){
+async function seat(req, res, next){
 
   const updatedTable = {
     ...req.body.data,
@@ -34,7 +34,17 @@ async function update(req, res, next){
   res.json({data});
 }
 
+//Finish handler for tables
+async function finish(req, res, next){
 
+  const updatedTable = {
+    ...res.locals.table,
+    reservation_id: null,
+  }
+  await service.update(updatedTable);
+  res.sendStatus(204);
+
+}
 
 //Validation Middleware
 
@@ -69,7 +79,6 @@ function requiredFieldsExist(req, res, next){
 
   let requiredFields;
 
-  console.log(req.method);
   switch(req.method){
     case "POST":
       requiredFields = requiredFieldsPOST;
@@ -106,12 +115,20 @@ function validateCapacity(req, res, next){
 
 //return 400 if table is occupied
 async function isFree(req, res, next){
-  const tableId = req.params.tableId
-  const table = await service.read(tableId);
-  res.locals.table = table;
+  const table = res.locals.table;
 
   if(table.reservation_id){
     next({status: 400, message: `table is occupied`});
+  }
+  next();
+}
+
+//return 400 if table is free
+async function isOccupied(req, res, next){
+  const table = res.locals.table;
+
+  if(!table.reservation_id){
+    next({status: 400, message: `table is not occupied`});
   }
   next();
 }
@@ -140,9 +157,20 @@ async function reservationExists(req, res, next){
   next();
 }
 
+//return 404 if table does not exist
+async function tableExists(req, res, next){
+  const tableId = req.params.tableId;
+  res.locals.table = await service.read(tableId);
+
+  if(!res.locals.table){
+    next({status: 404, message: `table ${tableId} not found`});
+  }
+  next();
+}
 
 module.exports = {
   list,
   create: [dataExists, requiredFieldsExist, validateName, validateCapacity, asyncErrorBoundary(create)],
-  update: [dataExists, requiredFieldsExist, reservationExists, isFree, capacityCheck, asyncErrorBoundary(update)]
+  seat: [dataExists, requiredFieldsExist, tableExists, reservationExists, isFree, capacityCheck, asyncErrorBoundary(seat)],
+  finish: [tableExists, isOccupied, asyncErrorBoundary(finish)],
 };
