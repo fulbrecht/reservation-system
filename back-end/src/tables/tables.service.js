@@ -12,6 +12,12 @@ async function list(status) {
     }
 }
 
+async function read(tableId) {
+    return knex("tables as t")
+        .where({"t.table_id": tableId})
+        .first();
+}
+
 async function create(table) {
     return knex("tables")
         .insert(table)
@@ -33,6 +39,7 @@ async function update(updatedTable) {
 
 module.exports = {
     list,
+    read,
     create,
     update,
 };

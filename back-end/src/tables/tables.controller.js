@@ -1,5 +1,6 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./tables.service");
+const reservationsService = require("../reservations/reservations.service");
 const environment = process.env.NODE_ENV || "development";
 
 //List handler for tables
@@ -80,12 +81,35 @@ function validateCapacity(req, res, next){
   next();
 }
 
+//return 400 if table is occupied
+async function isFree(req, res, next){
+  const tableId = req.params.tableId
+  const table = await service.read(tableId);
+  res.locals.table = table;
 
+  if(table.reservation_id){
+    next({status: 400, message: `table is occupied`});
+  }
+  next();
+}
+
+//return 400 if capacity less than people in reservation
+async function capacityCheck(req, res, next){
+  const reservationId = req.body.data.reservation_id;
+  const reservation = await reservationsService.read(reservationId);
+  const tableCapacity = res.locals.table.capacity;
+
+  if(reservation.people > tableCapacity){
+    next({status: 400, message: `reservation size too large`});
+  }
+
+  next();
+}  
 
 
 
 module.exports = {
   list,
   create: [dataExists, requiredFieldsExist, validateCapacity, asyncErrorBoundary(create)],
-  update: [dataExists,asyncErrorBoundary(update)]
+  update: [dataExists, isFree, capacityCheck, asyncErrorBoundary(update)]
 };
