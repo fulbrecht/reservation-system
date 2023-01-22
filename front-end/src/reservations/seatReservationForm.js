@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { seatReservation } from "../utils/api";
 import { listTables } from "../utils/api";
 
-function SeatReservationForm({reservationId}){
+function SeatReservationForm({reservation_id}){
 
     const [tables, setTables] = useState([]);
     const [tableError, setTableError] = useState(null);
@@ -20,10 +20,12 @@ function SeatReservationForm({reservationId}){
         return () => abortController.abort();
     }
 
+    const tableOptions = tables.map((table) => {
+        return <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
+    })
 
   const initialFormState = {
-      first_name: "",
-      last_name: "",
+      table_id: "",
     };
 
   const history = useHistory();
@@ -40,14 +42,12 @@ function SeatReservationForm({reservationId}){
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitted:", formData);
-    const table = {
-      ...formData
-    }
+    const tableId = formData.table_id;
+    console.log("Submitted:", {reservation_id}, "Table ID:", tableId);
 
     setSeatError(null);
 
-    const response = await seatReservation(reservationId,table);
+    const response = await seatReservation(tableId, {reservation_id});
     const savedData = await response.json();
     setSeatError(Error(savedData.error));
     console.log("Reservation Seated!", savedData);
@@ -65,8 +65,16 @@ function SeatReservationForm({reservationId}){
 
   return (
     <form onSubmit={handleSubmit}>
-        <label>
-            <select name="table_id" />
+        <label>Select Table: 
+            <select 
+              id="table_id"
+              name="table_id"
+              onChange={handleChange}
+              value={formData.table_id}
+            >
+              <option value="" >-- Select a Table --</option>
+              {tableOptions}
+            </select>
         </label>
         <br />
         <ErrorAlert error={seatError} />

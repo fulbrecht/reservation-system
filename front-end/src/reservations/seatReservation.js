@@ -9,7 +9,7 @@ function SeatReservation(){
     return (
         <main>
             <h1>Seat Reservation {reservationId}</h1>
-            <SeatReservationForm reservationId={reservationId} />
+            <SeatReservationForm reservation_id={reservationId} />
 
         </main>
     )

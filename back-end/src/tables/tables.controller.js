@@ -2,7 +2,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./tables.service");
 const environment = process.env.NODE_ENV || "development";
 
-//List handler for reservation resources
+//List handler for tables
 async function list(req, res) {
 
     const status = req.query.status;
@@ -13,7 +13,7 @@ async function list(req, res) {
     });
 }
 
-//Create handler for reservation resources
+//Create handler for tables 
 async function create(req, res, next) {
   const newTable = {
     ...req.body.data
@@ -21,6 +21,20 @@ async function create(req, res, next) {
   const data = await service.create(newTable);
   res.status(201).json({data});
 }
+
+//Update handler for tables
+async function update(req, res, next){
+  console.log(req.params);
+
+  const updatedTable = {
+    ...req.body.data,
+    table_id: req.params.tableId,
+  }
+  const data = await service.update(updatedTable);
+  res.json({data});
+}
+
+
 
 //Validation Middleware
 
@@ -69,7 +83,9 @@ function validateCapacity(req, res, next){
 
 
 
+
 module.exports = {
   list,
   create: [dataExists, requiredFieldsExist, validateCapacity, asyncErrorBoundary(create)],
+  update: [dataExists,asyncErrorBoundary(update)]
 };

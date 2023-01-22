@@ -31,7 +31,6 @@ function ReservationsList({date}){
 
     return(
         <main className="container">
-
             <ErrorAlert error={reservationsError} />
             <table className="table">
                 <thead>
@@ -41,7 +40,7 @@ function ReservationsList({date}){
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Phone #</th>
-                        <th>Date</th>
+                        <th>People</th>
                         <th></th>
                     </tr>
                 </thead>

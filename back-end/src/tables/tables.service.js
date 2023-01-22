@@ -19,7 +19,20 @@ async function create(table) {
         .then((result) => result[0]);
 }
 
+async function update(updatedTable) {
+    console.log(updatedTable);
+    await knex("tables")
+        .where({ table_id: updatedTable.table_id })
+        .update(updatedTable, "*");
+
+    return knex("tables as t")
+        .where({ table_id: updatedTable.table_id })
+        .then((data) => data[0]);
+        
+}
+
 module.exports = {
-list,
-create,
+    list,
+    create,
+    update,
 };

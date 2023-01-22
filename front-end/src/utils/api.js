@@ -100,8 +100,8 @@ export async function createTable(data, signal) {
 }
 
 //Seat Reservation Function
-export async function seatReservation(data, signal){
-  const url = new URL(`${API_BASE_URL}/tables/${data.table_id}/seat`);
+export async function seatReservation(tableId, data, signal){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "PUT",
     headers,
