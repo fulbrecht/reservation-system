@@ -23,8 +23,15 @@ async function create(req, res, next) {
   res.status(201).json({data});
 }
 
-//Update handler for tables
+//Seat handler for tables
 async function seat(req, res, next){
+
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: "seated",
+  }
+
+  await reservationsService.update(updatedReservation);
 
   const updatedTable = {
     ...req.body.data,
@@ -41,7 +48,15 @@ async function finish(req, res, next){
     ...res.locals.table,
     reservation_id: null,
   }
+
+  const updatedReservation = {
+    reservation_id: res.locals.table.reservation_id,
+    status: "finished",
+  }
+
   await service.update(updatedTable);
+  await reservationsService.update(updatedReservation);
+  
   res.sendStatus(200);
 
 }

@@ -43,6 +43,17 @@ function dataExists(req, res, next){
   }
 }
 
+async function reservationExists(req, res, next){
+  const reservationId = req.params.reservation_Id;
+  res.locals.reservation = await service.read(reservationId);
+
+  if(!res.locals.reservation){
+    next({status: 404, message: `reservation ${reservationId} not found`});
+  }
+
+  next();
+}
+
 //Validate required fields exist
 const requiredFields = [
   'first_name',
@@ -158,6 +169,6 @@ function validatePeople(req, res, next){
 
 module.exports = {
   list,
-  read,
+  read: [reservationExists, asyncErrorBoundary(read)],
   create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, asyncErrorBoundary(create)],
 };

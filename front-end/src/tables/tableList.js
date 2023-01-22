@@ -1,32 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { listTables } from "../utils/api";
+import React from "react";
 import Table from "./table";
-import ErrorAlert from "../layout/ErrorAlert";
 
-function ReservationsList({date}){
+function TableList({tables, loadDashboard}){
 
-    const [tables, setTables] = useState([]);
-    const [tableError, setTableError] = useState(null);
+    // const [tables, setTables] = useState([]);
+    // const [tableError, setTableError] = useState(null);
 
-    useEffect(loadTables, []);
+    // useEffect(loadTables, []);
 
-    function loadTables() {
-        const abortController = new AbortController();
-        setTableError(null);
-        listTables({}, abortController.signal)
-        .then(setTables)
-        .catch(setTableError);
-        return () => abortController.abort();
-    }
+    // function loadTables() {
+    //     const abortController = new AbortController();
+    //     setTableError(null);
+    //     listTables({}, abortController.signal)
+    //     .then(setTables)
+    //     .catch(setTableError);
+    //     return () => abortController.abort();
+    // }
 
     //construct list of reservation components 
     const list = tables.map((table) => (
-        <Table key={table.table_id} table={table} loadTables={loadTables}/>
+        <Table key={table.table_id} table={table} loadDashboard={loadDashboard}/>
     ));
 
     return(
         <main className="container">
-            <ErrorAlert error={tableError} />
             <table className="table">
                 <thead>
                     <tr>
@@ -44,4 +41,4 @@ function ReservationsList({date}){
     )
 }
 
-export default ReservationsList;
+export default TableList;

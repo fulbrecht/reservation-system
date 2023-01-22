@@ -64,7 +64,9 @@ function SeatReservationForm({reservation_id}){
   }
 
   return (
+
     <form onSubmit={handleSubmit}>
+        <ErrorAlert error={tableError} />
         <label>Select Table: 
             <select 
               id="table_id"
