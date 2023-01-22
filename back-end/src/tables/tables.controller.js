@@ -49,15 +49,15 @@ async function finish(req, res, next){
     reservation_id: null,
   }
 
-  const updatedReservation = {
-    reservation_id: res.locals.table.reservation_id,
-    status: "finished",
-  }
+  // const updatedReservation = {
+  //   reservation_id: res.locals.table.reservation_id,
+  //   status: "finished",
+  // }
 
-  await service.update(updatedTable);
-  await reservationsService.update(updatedReservation);
+  const data = await service.update(updatedTable);
+  // await reservationsService.update(updatedReservation);
   
-  res.sendStatus(200);
+  res.status(200).json({data});
 
 }
 

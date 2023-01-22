@@ -118,12 +118,22 @@ export async function seatReservation(tableId, data, signal){
 }
 
 //Finish a table
-export async function finishTable(tableId, signal){
-  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
+export async function finishTable(tableId, reservationId, signal){
+  const tableUrl = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "DELETE",
     headers,
     signal,
   }
-  return await fetch(url, options);
+  
+  const reservationUrl = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`);
+  const reservationOptions = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {status: "finished"}}),
+    signal,
+  }
+
+  await fetch(reservationUrl, reservationOptions)
+  return await fetch(tableUrl, options);
 }

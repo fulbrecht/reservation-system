@@ -32,6 +32,22 @@ async function create(req, res, next) {
   res.status(201).json({data});
 }
 
+//Update handler for reservations
+async function update(req, res, next){
+
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: req.params.reservation_id,
+  }
+  const data = await service.update(updatedReservation);
+  
+  res.status(200).json({data});
+
+}
+
+
+
+
 //Validation Middleware
 
 //return 400 if data is missing
@@ -171,4 +187,5 @@ module.exports = {
   list,
   read: [reservationExists, asyncErrorBoundary(read)],
   create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, asyncErrorBoundary(create)],
+  update,
 };
