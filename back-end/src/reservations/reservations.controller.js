@@ -13,6 +13,16 @@ async function list(req, res) {
     });
 }
 
+async function read(req, res) {
+  const reservationId = req.params.reservation_Id;
+  const data = await service.read(reservationId);
+
+  res.json({
+    data,
+  })
+
+}
+
 //Create handler for reservation resources
 async function create(req, res, next) {
   const newReservation = {
@@ -148,5 +158,6 @@ function validatePeople(req, res, next){
 
 module.exports = {
   list,
+  read,
   create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, asyncErrorBoundary(create)],
 };

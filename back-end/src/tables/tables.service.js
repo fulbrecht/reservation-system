@@ -2,13 +2,19 @@ const knex = require("../db/connection");
 
 async function list(status) {
     if(!status){
-        return knex("tables").select("*");
+        return knex("tables")
+            .select("*")
+            .orderBy("table_name")
     } else if(status === "free"){
-        return knex("tables").select("*")
+        return knex("tables")
+            .select("*")
             .whereNull('reservation_id')
+            .orderBy("table_name")
     } else if(status === "occupied"){
-        return knex("tables").select("*")
+        return knex("tables")
+            .select("*")
             .whereNotNull('reservation_id')
+            .orderBy("table_name")
     }
 }
 

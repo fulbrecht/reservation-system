@@ -7,7 +7,7 @@ function TableForm(){
 
     const initialFormState = {
         table_name: "",
-        capacity: 1,
+        capacity: "",
     }
 
     const history = useHistory();
@@ -68,7 +68,6 @@ function TableForm(){
                 id="capacity"
                 type="number"
                 name="capacity" 
-                min="1"
                 onChange={handleChange}
                 value={formData.capacity}
                 required
