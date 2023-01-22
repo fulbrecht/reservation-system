@@ -21,7 +21,7 @@ function ReservationsList({date}){
 
     //construct list of reservation components 
     const list = tables.map((table) => (
-        <Table key={table.table_id} table={table} />
+        <Table key={table.table_id} table={table} loadTables={loadTables}/>
     ));
 
     return(
@@ -33,6 +33,7 @@ function ReservationsList({date}){
                         <th>Table Name</th>
                         <th>Capacity</th>
                         <th>Status</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

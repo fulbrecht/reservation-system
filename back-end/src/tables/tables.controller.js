@@ -42,7 +42,7 @@ async function finish(req, res, next){
     reservation_id: null,
   }
   await service.update(updatedTable);
-  res.sendStatus(204);
+  res.sendStatus(200);
 
 }
 

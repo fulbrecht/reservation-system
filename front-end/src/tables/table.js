@@ -1,11 +1,11 @@
 import React from "react";
 import { finishTable } from "../utils/api";
 
-function Table({table}){
+function Table({table, loadTables}){
 
     const handleClick = () => {
         if(window.confirm('Is this table ready to seat new guests? This cannot be undone.') === true) {
-            finishTable(table.table_id);
+            finishTable(table.table_id).then(()=> loadTables());
         }
       }
 
