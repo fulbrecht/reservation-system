@@ -4,10 +4,10 @@ const environment = process.env.NODE_ENV || "development";
 
 //List handler for reservations 
 async function list(req, res) {
-
-    const date = req.query.date;
-    const finished = req.query.finished;
-    const data = await service.list(date, finished);
+    const query = req.query;
+    // const date = req.query.date;
+    // const mobile_number = req.query.mobile_number;
+    const data = await service.list(query);
 
     res.json({
       data,
