@@ -113,8 +113,8 @@ export async function seatReservation(tableId, data, signal){
     body: JSON.stringify({data}),
     signal,
   }
-  return await fetch(url, options);
 
+  return await fetch(url, options);
 }
 
 //Finish a table
@@ -126,14 +126,5 @@ export async function finishTable(tableId, reservationId, signal){
     signal,
   }
   
-  const reservationUrl = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`);
-  const reservationOptions = {
-    method: "PUT",
-    headers,
-    body: JSON.stringify({data: {status: "finished"}}),
-    signal,
-  }
-
-  await fetch(reservationUrl, reservationOptions)
   return await fetch(tableUrl, options);
 }

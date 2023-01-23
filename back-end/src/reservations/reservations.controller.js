@@ -2,19 +2,21 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 const environment = process.env.NODE_ENV || "development";
 
-//List handler for reservation resources
+//List handler for reservations 
 async function list(req, res) {
 
     const date = req.query.date;
-    const data = await service.list(date);
+    const finished = req.query.finished;
+    const data = await service.list(date, finished);
 
     res.json({
       data,
     });
 }
 
+//Read handler for reservations
 async function read(req, res) {
-  const reservationId = req.params.reservation_Id;
+  const reservationId = req.params.reservation_id;
   const data = await service.read(reservationId);
 
   res.json({
@@ -46,8 +48,6 @@ async function update(req, res, next){
 }
 
 
-
-
 //Validation Middleware
 
 //return 400 if data is missing
@@ -60,7 +60,7 @@ function dataExists(req, res, next){
 }
 
 async function reservationExists(req, res, next){
-  const reservationId = req.params.reservation_Id;
+  const reservationId = req.params.reservation_id;
   res.locals.reservation = await service.read(reservationId);
 
   if(!res.locals.reservation){
@@ -180,12 +180,40 @@ function validatePeople(req, res, next){
   next();
 }
 
+//return 400 if status is not booked
+function validateNewStatus(req, res, next){
+  const status = req.body.data.status;
+  if(status === 'seated' || status === 'finished'){
+    next({status: 400, message: `new reservation cannot have status ${status}`});
+  }
+  next();
+}
 
+//return 400 if status is invalid
+function validateStatus(req, res, next){
+  const status = req.body.data.status;
+  const reservationStatus = res.locals.reservation.status;
+  const validStatus = [
+    "booked",
+    "seated",
+    "finished",
+  ]
+
+  if(reservationStatus === "finished"){
+    next({status: 400, message: `a finished reservation cannot be updated`});
+  }
+
+  if(!validStatus.includes(status)){
+    next({status: 400, message: `${status} is an invalid status`});
+  }
+
+  next();
+}
 
 
 module.exports = {
   list,
   read: [reservationExists, asyncErrorBoundary(read)],
-  create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, asyncErrorBoundary(create)],
-  update,
+  create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, validateNewStatus, asyncErrorBoundary(create)],
+  update: [reservationExists, validateStatus, asyncErrorBoundary(update)],
 };

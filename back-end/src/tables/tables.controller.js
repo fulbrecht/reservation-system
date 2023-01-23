@@ -1,6 +1,7 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./tables.service");
 const reservationsService = require("../reservations/reservations.service");
+const knex = require("../db/connection");
 const environment = process.env.NODE_ENV || "development";
 
 //List handler for tables
@@ -25,19 +26,18 @@ async function create(req, res, next) {
 
 //Seat handler for tables
 async function seat(req, res, next){
-
+  
   const updatedReservation = {
     ...res.locals.reservation,
     status: "seated",
   }
-
-  await reservationsService.update(updatedReservation);
-
   const updatedTable = {
     ...req.body.data,
     table_id: req.params.tableId,
   }
-  const data = await service.update(updatedTable);
+  
+  
+  const data = await service.statusUpdate(updatedTable, updatedReservation);
   res.json({data});
 }
 
@@ -49,13 +49,12 @@ async function finish(req, res, next){
     reservation_id: null,
   }
 
-  // const updatedReservation = {
-  //   reservation_id: res.locals.table.reservation_id,
-  //   status: "finished",
-  // }
+  const updatedReservation = {
+    reservation_id: res.locals.table.reservation_id,
+    status: "finished",
+  }
 
-  const data = await service.update(updatedTable);
-  // await reservationsService.update(updatedReservation);
+  const data = await service.statusUpdate(updatedTable, updatedReservation);
   
   res.status(200).json({data});
 
@@ -172,6 +171,15 @@ async function reservationExists(req, res, next){
   next();
 }
 
+//return 400 if reservation is already seated
+async function reservationSeated(req, res, next){
+  const reservation = res.locals.reservation;
+  if(reservation.status === 'seated'){
+    next({status: 400, message: `reservation ${reservation.reservation_id} is already seated`});
+  }
+  next();
+}
+
 //return 404 if table does not exist
 async function tableExists(req, res, next){
   const tableId = req.params.tableId;
@@ -186,6 +194,6 @@ async function tableExists(req, res, next){
 module.exports = {
   list,
   create: [dataExists, requiredFieldsExist, validateName, validateCapacity, asyncErrorBoundary(create)],
-  seat: [dataExists, requiredFieldsExist, tableExists, reservationExists, isFree, capacityCheck, asyncErrorBoundary(seat)],
+  seat: [dataExists, requiredFieldsExist, tableExists, reservationExists, reservationSeated, isFree, capacityCheck, asyncErrorBoundary(seat)],
   finish: [tableExists, isOccupied, asyncErrorBoundary(finish)],
 };

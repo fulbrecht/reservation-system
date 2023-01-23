@@ -42,9 +42,32 @@ async function update(updatedTable) {
         
 }
 
+async function statusUpdate(updatedTable, updatedReservation) {
+    await knex.transaction(async trx => {
+        await trx("tables")
+            .where({ table_id: updatedTable.table_id })
+            .update(updatedTable,"*");
+        await trx("reservations")
+            .where({ reservation_id: updatedReservation.reservation_id })
+            .update(updatedReservation, "*");
+
+    })
+
+    return knex("tables as t")
+        .where({ table_id: updatedTable.table_id })
+        .then((data) => data[0]);
+
+}
+
+async function finish(){
+    
+}
+
+
 module.exports = {
     list,
     read,
     create,
     update,
+    statusUpdate,
 };
