@@ -23,13 +23,13 @@ function Search(){
     }
 
     const list = reservations.length > 0 ?
-        <ReservationsList reservations={reservations} /> :
+        <ReservationsList reservations={reservations} load={loadSearch} /> :
         <h4>No reservations found</h4>
 
     return (
         <main>
             <h1>Search</h1>
-            <SearchForm setMobileNumber={setMobileNumber} />
+            <SearchForm setMobileNumber={setMobileNumber}/>
             <ErrorAlert error={reservationsError} />
             {list}
         </main>

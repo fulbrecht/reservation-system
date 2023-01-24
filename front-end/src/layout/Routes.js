@@ -9,6 +9,7 @@ import useQuery from "../utils/useQuery";
 import NewTables from "../tables/newTables";
 import SeatReservation from "../reservations/seatReservation";
 import Search from "../Search/search";
+import EditReservation from "../reservations/editReservation";
 
 
 
@@ -41,6 +42,9 @@ function Routes() {
       </Route>
       <Route exact={true} path="/reservations/:reservationId/seat">
         <SeatReservation />
+      </Route>
+      <Route exact={true} path="/reservations/:reservationId/edit">
+        <EditReservation />
       </Route>
       <Route path="/dashboard">
         <Dashboard  date={date}/>

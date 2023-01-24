@@ -5,7 +5,7 @@ function Table({table, loadDashboard}){
 
     const handleClick = () => {
         if(window.confirm('Is this table ready to seat new guests? This cannot be undone.') === true) {
-            finishTable(table.table_id, table.reservation_id).then(()=> loadDashboard());
+            finishTable(table.table_id).then(()=> loadDashboard());
         }
       }
 

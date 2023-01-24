@@ -1,10 +1,23 @@
 import ErrorAlert from "../layout/ErrorAlert";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useHistory } from "react-router";
 import { createReservation } from "../utils/api";
 
-function ReservationForm(){
-  const initialFormState = {
+function ReservationForm({reservation}){
+
+  let initialFormState;
+
+  if(reservation){
+    initialFormState = {
+        first_name: reservation.first_name,
+        last_name: reservation.last_name,
+        mobile_number: reservation.mobile_number,
+        reservation_date: reservation.reservation_date,
+        reservation_time: reservation.reservation_time,
+        people: reservation.people,
+      };
+  } else {
+    initialFormState = {
       first_name: "",
       last_name: "",
       mobile_number: "",
@@ -12,6 +25,7 @@ function ReservationForm(){
       reservation_time: "",
       people: 0,
     };
+  }
 
   const history = useHistory();
   const [reservationsError, setReservationsError] = useState(null);
@@ -42,7 +56,6 @@ function ReservationForm(){
     if(!savedData.error){
       history.push(`/dashboard?date=${reservation.reservation_date}`);
     }
-    //setFormData({ ...initialFormState });
 
   };
 

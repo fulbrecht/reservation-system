@@ -69,6 +69,18 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+export async function getReservation(reservationId, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
+  const options = {
+    method: "GET",
+    headers,
+    signal,
+  }
+  return await fetchJson(url, options, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+
 //Creates new reservation.
 export async function createReservation(data, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
@@ -118,7 +130,7 @@ export async function seatReservation(tableId, data, signal){
 }
 
 //Finish a table
-export async function finishTable(tableId, reservationId, signal){
+export async function finishTable(tableId, signal){
   const tableUrl = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "DELETE",
@@ -127,4 +139,16 @@ export async function finishTable(tableId, reservationId, signal){
   }
   
   return await fetch(tableUrl, options);
+}
+
+//Cancel a reservation
+export async function cancelReservation(reservationId, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`);
+  const options = {
+    method: "PUT",
+    headers,
+    signal,
+    body: JSON.stringify({data: {status: "cancelled"}}),
+  }
+  return await fetch(url, options);
 }

@@ -65,7 +65,7 @@ function Dashboard({date}) {
       <button onClick={handleNext}>Next</button>
       <h4>Reservations</h4>
       <ErrorAlert error={reservationsError} />
-      <ReservationsList reservations={reservations} />
+      <ReservationsList reservations={reservations} load={loadDashboard}/>
       <h4>Tables</h4>
       <ErrorAlert error={tableError} />
       <TableList tables={tables} loadDashboard={loadDashboard} />

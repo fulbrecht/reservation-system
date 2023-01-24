@@ -197,6 +197,7 @@ function validateStatus(req, res, next){
     "booked",
     "seated",
     "finished",
+    "cancelled",
   ]
 
   if(reservationStatus === "finished"){

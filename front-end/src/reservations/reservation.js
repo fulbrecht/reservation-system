@@ -1,14 +1,25 @@
 import React from "react";
 import { useHistory } from "react-router";
+import { cancelReservation } from "../utils/api";
 
-function Reservation({reservation}){
-    const link = `/reservations/${reservation.reservation_id}/seat`;
+function Reservation({reservation, load}){
+    const seatLink = `/reservations/${reservation.reservation_id}/seat`;
+    const editLink = `/reservations/${reservation.reservation_id}/edit`;
     const history = useHistory();
 
-    const handleClick = () => {
-        history.push(link);
+    const handleSeat = () => {
+        history.push(seatLink);
+      }
+    const handleEdit = () => {
+        history.push(editLink);
+      }
+    const handleCancel = () => {
+        if(window.confirm('Do you want to cancel this reservation? This cannot be undone.') === true) {
+            cancelReservation(reservation.reservation_id).then(()=>load())
+        }
       }
 
+ 
     return (
         <tr>
             <td>{reservation.reservation_time}</td>
@@ -18,9 +29,12 @@ function Reservation({reservation}){
             <td>{reservation.mobile_number}</td>
             <td>{reservation.people}</td>
             <td>{reservation.status === "booked" && 
-                <button href={link} onClick={handleClick}>Seat</button>
+                <button href={seatLink} onClick={handleSeat}>Seat</button>
                 }
             </td>
+            <td><button href={editLink} onClick={handleEdit}>Edit</button></td>
+            <td><button data-reservation-id-cancel={reservation.reservation_id} onClick={handleCancel}>Cancel</button></td>
+            
         </tr>
     )
 }
