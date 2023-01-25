@@ -222,7 +222,7 @@ function isBooked(req, res, next){
 
 
 module.exports = {
-  list,
+  list: [asyncErrorBoundary(list)],
   read: [reservationExists, asyncErrorBoundary(read)],
   create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, validateNewStatus, asyncErrorBoundary(create)],
   updateStatus: [reservationExists, validateStatus, asyncErrorBoundary(update)],

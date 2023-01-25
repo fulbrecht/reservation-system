@@ -192,7 +192,7 @@ async function tableExists(req, res, next){
 }
 
 module.exports = {
-  list,
+  list: [asyncErrorBoundary(list)],
   create: [dataExists, requiredFieldsExist, validateName, validateCapacity, asyncErrorBoundary(create)],
   seat: [dataExists, requiredFieldsExist, tableExists, reservationExists, reservationSeated, isFree, capacityCheck, asyncErrorBoundary(seat)],
   finish: [tableExists, isOccupied, asyncErrorBoundary(finish)],
