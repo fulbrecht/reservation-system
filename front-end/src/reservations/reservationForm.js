@@ -50,7 +50,7 @@ function ReservationForm({reservation}){
     setReservationsError(null);
 
     let response;
-    if(reservation.reservation_id){
+    if(reservation){
       response = await editReservation(reservation.reservation_id, newReservation);
     } else {
       response = await createReservation(newReservation);
@@ -61,7 +61,7 @@ function ReservationForm({reservation}){
     setReservationsError(Error(savedData.error));
     console.log("Saved reservation!", savedData);
     if(!savedData.error){
-      history.push(`/dashboard?date=${reservation.reservation_date}`);
+      history.push(`/dashboard?date=${newReservation.reservation_date}`);
     }
 
   };
