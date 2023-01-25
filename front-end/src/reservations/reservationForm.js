@@ -1,7 +1,7 @@
 import ErrorAlert from "../layout/ErrorAlert";
 import React, {  useState } from "react";
 import { useHistory } from "react-router";
-import { createReservation } from "../utils/api";
+import { createReservation, editReservation } from "../utils/api";
 
 function ReservationForm({reservation}){
 
@@ -43,13 +43,20 @@ function ReservationForm({reservation}){
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Submitted:", formData);
-    const reservation = {
+    const newReservation = {
       ...formData
     }
 
     setReservationsError(null);
 
-    const response = await createReservation(reservation);
+    let response;
+    if(reservation.reservation_id){
+      response = await editReservation(reservation.reservation_id, newReservation);
+    } else {
+      response = await createReservation(newReservation);
+    }
+    
+    
     const savedData = await response.json();
     setReservationsError(Error(savedData.error));
     console.log("Saved reservation!", savedData);

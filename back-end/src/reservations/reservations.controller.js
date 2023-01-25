@@ -211,10 +211,28 @@ function validateStatus(req, res, next){
   next();
 }
 
+function isBooked(req, res, next){
+  const reservationStatus = res.locals.reservation.status;
+  if(reservationStatus !== "booked"){
+    next({status: 400, message: `Only 'booked' reservations may be edited.`});
+  }
+
+  next();
+}
+
 
 module.exports = {
   list,
   read: [reservationExists, asyncErrorBoundary(read)],
   create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, validateNewStatus, asyncErrorBoundary(create)],
-  update: [reservationExists, validateStatus, asyncErrorBoundary(update)],
+  updateStatus: [reservationExists, validateStatus, asyncErrorBoundary(update)],
+  update: [
+    reservationExists, 
+    dataExists, 
+    requiredFieldsExist, 
+    validateDate, 
+    validateTime, 
+    validatePeople,
+    isBooked, 
+    asyncErrorBoundary(update)]
 };

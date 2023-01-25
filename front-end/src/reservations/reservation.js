@@ -33,7 +33,9 @@ function Reservation({reservation, load}){
                 }
             </td>
             <td><button href={editLink} onClick={handleEdit}>Edit</button></td>
-            <td><button data-reservation-id-cancel={reservation.reservation_id} onClick={handleCancel}>Cancel</button></td>
+            <td>{reservation.status !== "cancelled" &&
+                <button data-reservation-id-cancel={reservation.reservation_id} onClick={handleCancel}>Cancel</button>
+                }</td>
             
         </tr>
     )

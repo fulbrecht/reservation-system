@@ -93,6 +93,19 @@ export async function createReservation(data, signal) {
   return await fetch(url,options);
 }
 
+//Updates existing reservation
+export async function editReservation(reservationId, data, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data}),
+    signal,
+  }
+  return await fetch(url,options);
+}
+
+
 //Table API Functions//
 
 //List tables
