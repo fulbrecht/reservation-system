@@ -1,19 +1,26 @@
 const knex = require("../db/connection");
 
-async function list({date, mobile_number}) {
+async function list(query) {
+
+    const {date, mobile_number} = query;
 
     let reservations = knex("reservations").select("*").orderBy('reservation_time', 'asc')
-    if(date){
-        reservations.where('reservation_date', date).whereNot('status', 'finished');
-    }
-
-    if(mobile_number){
-        reservations
+    
+    if(Object.keys(query).includes('mobile_number')){
+        if(mobile_number.length === 0){
+            reservations = [];
+        } else {
+            reservations
             .whereRaw(
                 "translate(mobile_number, '() -', '') like ?",
                 `%${mobile_number.replace(/\D/g, "")}%`
-            )
-            .orderBy("reservation_date");
+                )
+                .orderBy("reservation_date");
+        }
+    }
+        
+    if(date){
+        reservations.where('reservation_date', date).whereNot('status', 'finished');
     }
 
     return await reservations;
