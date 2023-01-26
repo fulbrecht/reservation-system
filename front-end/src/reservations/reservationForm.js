@@ -41,6 +41,7 @@ function ReservationForm({reservation}){
   };
 
   const handleSubmit = async (event) => {
+    const abortController = new AbortController();
     event.preventDefault();
     console.log("Submitted:", formData);
     const newReservation = {
@@ -51,9 +52,9 @@ function ReservationForm({reservation}){
 
     let response;
     if(reservation){
-      response = await editReservation(reservation.reservation_id, newReservation);
+      response = await editReservation(reservation.reservation_id, newReservation, abortController.signal);
     } else {
-      response = await createReservation(newReservation);
+      response = await createReservation(newReservation, abortController.signal);
     }
     
     

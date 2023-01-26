@@ -27,8 +27,12 @@ async function read(req, res) {
 
 //Create handler for reservation resources
 async function create(req, res, next) {
+
+  const newMobileNumber = req.body.data.mobile_number.replace(/\D/g,'');
+
   const newReservation = {
-    ...req.body.data
+    ...req.body.data,
+    mobile_number: newMobileNumber,
   }
   const data = await service.create(newReservation);
   res.status(201).json({data});
@@ -129,6 +133,18 @@ function validateDate(req, res, next){
   next();
 }
 
+function isValidPhone(resPhone){
+  return /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(resPhone)
+}
+
+function validatePhone(req, res, next){
+  const resPhone = req.body.data.mobile_number;
+  if(!isValidPhone(resPhone)){
+    next({status: 400, message: `mobile_number is not valid`});
+  }
+  next();
+}
+
 //Time Validations
 /* Return 400 if reservation_time is: 
     -Not a time
@@ -224,7 +240,16 @@ function isBooked(req, res, next){
 module.exports = {
   list: [asyncErrorBoundary(list)],
   read: [reservationExists, asyncErrorBoundary(read)],
-  create: [dataExists, requiredFieldsExist, validateDate, validateTime, validatePeople, validateNewStatus, asyncErrorBoundary(create)],
+  create: [
+    dataExists, 
+    requiredFieldsExist, 
+    validateDate, 
+    validateTime, 
+    validatePeople, 
+    validatePhone,
+    validateNewStatus, 
+    asyncErrorBoundary(create)
+  ],
   updateStatus: [reservationExists, validateStatus, asyncErrorBoundary(update)],
   update: [
     reservationExists, 
