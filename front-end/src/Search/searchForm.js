@@ -20,6 +20,7 @@ function SearchForm({setMobileNumber}){
         event.preventDefault();
         const {mobile_number} = formData;
         setMobileNumber(mobile_number);
+
     }
 
     return (

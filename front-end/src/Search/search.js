@@ -22,16 +22,23 @@ function Search(){
         return () => abortController.abort();
     }
 
-    const list = reservations.length > 0 ?
-        <ReservationsList reservations={reservations} load={loadSearch} /> :
-        <h4>No reservations found</h4>
+    function createList(){
+        if(mobile_number.length === 0){
+            return <></>;
+        } else if(reservations.length === 0){
+            return <h4>No reservations found</h4>;
+        } else {
+            return <ReservationsList reservations={reservations} load={loadSearch} />;
+        }
+    }
+
 
     return (
         <main>
             <h1>Search</h1>
-            <SearchForm setMobileNumber={setMobileNumber}/>
+            <SearchForm setReservations={setReservations} setReservationsError={setReservationsError} setMobileNumber={setMobileNumber}/>
             <ErrorAlert error={reservationsError} />
-            {list}
+            {createList()}
         </main>
     )
 }
