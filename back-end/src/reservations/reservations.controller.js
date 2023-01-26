@@ -28,7 +28,9 @@ async function read(req, res) {
 //Create handler for reservation resources
 async function create(req, res, next) {
 
-  const newMobileNumber = req.body.data.mobile_number.replace(/\D/g,'');
+  const cleanedMobile = req.body.data.mobile_number.replace(/\D/g,'');
+  const match = cleanedMobile.match(/^(\d{3})(\d{3})(\d{4})$/);
+  const newMobileNumber = match[1] + '-' + match[2] + '-' + match[3];
 
   const newReservation = {
     ...req.body.data,
